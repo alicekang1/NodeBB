@@ -31,6 +31,8 @@ SocketRooms.getAll = async function () {
 	};
 	const userRooms = {};
 	const topicData = {};
+
+	// Start of Original Code
 	for (const s of sockets) {
 		for (const key of s.rooms) {
 			if (key === 'online_guests') {
@@ -46,15 +48,30 @@ SocketRooms.getAll = async function () {
 			} else if (key.startsWith('category_')) {
 				totals.users.category += 1;
 			} else {
-				const tid = key.match(/^topic_(\d+)/);
-				if (tid) {
-					totals.users.topics += 1;
-					topicData[tid[1]] = topicData[tid[1]] || { count: 0 };
-					topicData[tid[1]].count += 1;
-				}
+				checkTid(key);
 			}
 		}
 	}
+	// End of Original Code
+
+	// Start of New Code
+	function checkTid(key) {
+		const tid = key.match(/^topic_(\d+)/);
+		if (tid) {
+			totals.users.topics += 1;
+			topicData[tid[1]] = topicData[tid[1]] || { count: 0 };
+			topicData[tid[1]].count += 1;
+		}
+	}
+	
+
+	for (const s of sockets) {
+		for (const key of s.rooms) {
+
+		}
+	}
+	// End of New Code
+
 	totals.onlineRegisteredCount = Object.keys(userRooms).length;
 
 	let topTenTopics = [];
