@@ -40,7 +40,6 @@ SocketRooms.getAll = async function () {
 			topicData[tid[1]].count += 1;
 		}
 	}
-	
 	function checkKey(key) {
 		if (key === 'online_guests') {
 			totals.onlineGuestCount += 1;
