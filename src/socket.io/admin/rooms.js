@@ -32,7 +32,6 @@ SocketRooms.getAll = async function () {
 	const userRooms = {};
 	const topicData = {};
 
-	// Start of New Code
 	function checkTid(key) {
 		const tid = key.match(/^topic_(\d+)/);
 		if (tid) {
@@ -42,31 +41,27 @@ SocketRooms.getAll = async function () {
 		}
 	}
 	
-
-	for (const s of sockets) {
-		for (const key of s.rooms) {
-
+	function checkKey(key) {
+		if (key === 'online_guests') {
+			totals.onlineGuestCount += 1;
+		} else if (key === 'categories') {
+			totals.users.categories += 1;
+		} else if (key === 'recent_topics') {
+			totals.users.recent += 1;
+		} else if (key === 'unread_topics') {
+			totals.users.unread += 1;
+		} else if (key.startsWith('uid_')) {
+			userRooms[key] = 1;
+		} else if (key.startsWith('category_')) {
+			totals.users.category += 1;
+		} else {
+			checkTid(key);
 		}
 	}
-	// End of New Code
 
 	for (const s of sockets) {
 		for (const key of s.rooms) {
-			if (key === 'online_guests') {
-				totals.onlineGuestCount += 1;
-			} else if (key === 'categories') {
-				totals.users.categories += 1;
-			} else if (key === 'recent_topics') {
-				totals.users.recent += 1;
-			} else if (key === 'unread_topics') {
-				totals.users.unread += 1;
-			} else if (key.startsWith('uid_')) {
-				userRooms[key] = 1;
-			} else if (key.startsWith('category_')) {
-				totals.users.category += 1;
-			} else {
-				checkTid(key);
-			}
+			checkKey(key);
 		}
 	}
 
